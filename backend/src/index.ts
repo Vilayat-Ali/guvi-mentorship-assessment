@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import compression from "compression";
 import helmet from "helmet";
 
+import { ApiRoutes } from "./routes";
+
 // instantiating our app from `express()`.
 // app is the main instance of our application and is bounded by port to listen to requests.
 const app: express.Express = express();
@@ -21,5 +23,7 @@ app.use(compression());
 // 2. CORS
 // 3. etc
 app.use(helmet());
+
+app.use("/api", new ApiRoutes().getRouter());
 
 app.listen(8000, () => console.info(`Server rolling on port. ${8000}`));
