@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { userSchema } from "./schemas/user.schema";
+import { getValidatedEnvs } from "../config";
 
 export class Mongo {
-  private readonly mongoUri: string = "mongodb://localhost:27017/guvi";
+  private readonly mongoUri: string = getValidatedEnvs().MONGO_URI;
 
   // models
   public static readonly userModel = mongoose.model("user", userSchema);
