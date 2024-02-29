@@ -9,13 +9,13 @@ type Props = {
 
 const AuthProtected = ({ children }: Props) => {
     const navigate = useNavigate();
-    const { id } = useAppSelector((state) => state.user);
+    const { email } = useAppSelector((state) => state.user);
 
     React.useEffect(() => {
-        if(id === "") {
+        if(email === "") {
             navigate("/account");
         }
-    });
+    }, [email, navigate]);
 
   return (
     <React.Fragment>

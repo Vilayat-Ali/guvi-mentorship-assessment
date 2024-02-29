@@ -15,12 +15,12 @@ export class AccountController {
       }
 
       userInfo["password"] = hashSync(userInfo.password);
-      const userInstance = await Mongo.userModel.create(userInfo);
+      const { id, username, email } = await Mongo.userModel.create(userInfo);
 
       const payload = {
-        id: userInstance._id,
-        username: userInfo.username,
-        email: userInfo.email,
+        id,
+        username,
+        email,
       };
 
       const token: string = JWT.generateToken(payload);
@@ -28,9 +28,12 @@ export class AccountController {
       return res.json({
         message: "User registered successfully!",
         access_token: token,
+        user: {
+          username,
+          email,
+        },
       });
     } catch (err: any) {
-      console.log(err);
       return res.json({
         err,
       });
@@ -45,14 +48,20 @@ export class AccountController {
         throw new Error("Invalid request body");
       }
 
-      const existingUser = await Mongo.userModel.findOne({ email: userInfo });
+      const existingUser = await Mongo.userModel.findOne({
+        email: userInfo.email,
+      });
 
       if (!existingUser) {
-        throw new Error("Invalid email or account doesn't exists");
+        return res.status(500).json({
+          message: "User doesnt exists",
+        });
       }
 
       if (!compareSync(userInfo.password, existingUser.password)) {
-        throw new Error("Invalid password");
+        return res.status(500).json({
+          message: "Invalid credentials",
+        });
       }
 
       const payload = {
@@ -66,11 +75,13 @@ export class AccountController {
       return res.json({
         message: "User logged in successfully!",
         access_token: token,
+        user: {
+          username: existingUser.username,
+          email: existingUser.email,
+        },
       });
     } catch (err: any) {
-      return res.json({
-        err,
-      });
+      return res.status(500).json(err);
     }
   }
 }

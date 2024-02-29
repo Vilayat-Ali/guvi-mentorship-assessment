@@ -14,7 +14,6 @@ const loginZodSchema = z.object({
 export class AccountService {
   public static validateRegisterBody(body: any) {
     try {
-      console.log(body);
       return registerZodSchema.parse(body);
     } catch (err: any) {
       throw new Error(err);

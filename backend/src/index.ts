@@ -1,6 +1,7 @@
 import express from "express";
 import compression from "compression";
 import helmet from "helmet";
+import cors from "cors";
 
 import { Mongo } from "./db";
 
@@ -25,6 +26,13 @@ const ENV = getValidatedEnvs();
 // adding middleware to parse the request
 // In simpler words, this middleware acts as a serializer and deserializer for our application request data exchange methods
 app.use(express.json());
+
+// adding cors protection
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 // `compression` library provides middleware to compress payload of our JSON responses and decompress our JSON encoded request bodies.
 // compression reduces latency and is generally encouraged to enhance performance.

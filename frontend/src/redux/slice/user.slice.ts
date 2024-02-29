@@ -1,24 +1,21 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../interfaces/user";
 
 export const userSlice = createSlice({
   name: "user",
   initialState: {
-    id: "",
     username: "",
     email: "",
   },
   reducers: {
-    login: (state, action: PayloadAction<User>) => {
-        state = action.payload;
+    login: (state, {payload: {email, username}}: PayloadAction<User>) => {
+        state.email = email;
+        state.username = username;
     },
     logout: (state) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        state = {
-            id: "",
-            username: "",
-            email: ""
-        }
+        state.username = "";
+        state.email = "";
     }
   },
 });
